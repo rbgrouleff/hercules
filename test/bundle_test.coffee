@@ -29,6 +29,14 @@ module.exports = class BundleTest extends Janitor.TestCase
     main = context.require './main'
     @assertEqual 'Child 1', main.child1.name
   
+  'test multi-leveled chained require': ->
+    root_dir = path.join __dirname, 'fixtures', 'simple-package-multi-level-require'
+    bundle = new Bundle root_dir
+    result_in_closure = -> eval bundle.toString()
+    result_in_closure.call context = {}
+    main = context.require './main'
+    @assertEqual 'Child 3', main.child1.child2.child3.name
+
   'test caching': ->
     root_dir = path.join __dirname, 'fixtures', 'simple-package'
     bundle = new Bundle root_dir
